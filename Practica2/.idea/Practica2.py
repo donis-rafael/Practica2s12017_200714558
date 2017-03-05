@@ -325,6 +325,8 @@ class Matriz:
             nuevoNodoVertical = NodoMatriz("",letra,"")
             self.inicioVertical = nuevoNodoVertical
 
+        ################# CREACION CABECERA HORIZONTAL #################
+
         tempHorizont = self.inicioHorizontal
 
         if self.existeHorizont(dominio) == True:
@@ -361,7 +363,46 @@ class Matriz:
                 temp2.derecha = tempHorizont
                 tempHorizont.izquierda = temp2
 
-        ################# CREACION DE CABECERA VERTICAL
+        ################# APUNTADORES CON CABECERA HORIZONTAL #################
+
+        if tempHorizont.abajo != None:
+            temp5 = None
+            while tempHorizont.abajo != None:
+                temp5 = tempHorizont
+                tempHorizont = tempHorizont.abajo
+                if  tempHorizont.getLetra() == letra or tempHorizont.getLetra() > letra:
+                    break
+
+        if tempHorizont.getLetra() == letra:
+            if tempHorizont.atras != None:
+                while tempHorizont.atras != None:
+                    tempHorizont = tempHorizont.atras
+            tempHorizont.atras = nuevoNodoMatriz
+            nuevoNodoMatriz.adelante = tempHorizont
+
+        elif tempHorizont.abajo != None and tempHorizont.getLetra() == "" and tempHorizont.abajo.getLetra() > letra:
+            temp5 = tempHorizont
+            temp6 = tempHorizont.abajo
+            tempHorizont = nuevoNodoMatriz
+            temp5.abajo = tempHorizont
+            tempHorizont.abajo = temp6
+            temp6.arriba = tempHorizont
+            tempHorizont.arriba = temp5
+
+        elif tempHorizont != None and tempHorizont.getLetra() > letra:
+            temp6 = tempHorizont
+            tempHorizont = nuevoNodoMatriz
+            temp5.abajo = tempHorizont
+            tempHorizont.abajo = temp6
+            temp6.arriba = tempHorizont
+            tempHorizont.arriba = temp5
+
+        else:
+            tempHorizont.abajo = nuevoNodoMatriz
+            nuevoNodoMatriz.arriba = tempHorizont
+
+        ################# CREACION DE CABECERA VERTICAL #################
+
         tempVerti = self.inicioVertical
 
         if self.existeVerti(letra) == True:
@@ -369,7 +410,7 @@ class Matriz:
                 tempVerti = tempVerti.abajo
 
         else:
-            nuevoNodoVertical = NodoMatriz("",letra,"")
+            nuevoNodoVertical = NodoMatriz("", letra, "")
             temp3 = None
             while tempVerti != None and tempVerti.getLetra() < letra:
                 temp3 = tempVerti
@@ -397,48 +438,7 @@ class Matriz:
                 temp3.abajo = tempVerti
                 tempVerti.arriba = temp3
 
-        ##APUNTADORES CON CABECERA HORIZONTAL
-        if tempHorizont.abajo != None:
-            temp5 = None
-            while tempHorizont.abajo != None:
-                temp5 = tempHorizont
-                tempHorizont = tempHorizont.abajo
-                if  tempHorizont.getLetra() == letra or tempHorizont.getLetra() > letra:
-                    break
-
-        if tempHorizont.getLetra() == letra:
-            print(tempVerti.getLetra() + " MALDITOOOOOOOS 1 " + tempVerti.getDominio())
-            if tempHorizont.atras != None:
-                while tempHorizont.atras != None:
-                    tempHorizont = tempHorizont.atras
-            tempHorizont.atras = nuevoNodoMatriz
-            nuevoNodoMatriz.adelante = tempHorizont
-
-        elif tempHorizont.abajo != None and tempHorizont.getLetra() == "" and tempHorizont.abajo.getLetra() > letra:
-            print(tempVerti.getLetra() + " MALDITOOOOOOOS 2 " + tempVerti.getDominio())
-            temp5 = tempHorizont
-            temp6 = tempHorizont.abajo
-            tempHorizont = nuevoNodoMatriz
-            temp5.abajo = tempHorizont
-            tempHorizont.abajo = temp6
-            temp6.arriba = tempHorizont
-            tempHorizont.arriba = temp5
-
-        elif tempHorizont != None and tempHorizont.getLetra() > letra:
-            print(tempVerti.getLetra() + " MALDITOOOOOOOS 3 " + tempVerti.getDominio())
-            temp6 = tempHorizont
-            tempHorizont = nuevoNodoMatriz
-            temp5.abajo = tempHorizont
-            tempHorizont.abajo = temp6
-            temp6.arriba = tempHorizont
-            tempHorizont.arriba = temp5
-
-        else:
-            print(tempVerti.getLetra() + " MALDITOOOOOOOS 4 " + tempVerti.getDominio())
-            tempHorizont.abajo = nuevoNodoMatriz
-            nuevoNodoMatriz.arriba = tempHorizont
-
-        ################# INICIA APUNTADORES CON CABECERA VERTICAL
+        ################# INICIA APUNTADORES CON CABECERA VERTICAL #################
 
         if tempVerti.derecha != None:
             temp5 = None
@@ -448,17 +448,7 @@ class Matriz:
                 if  tempVerti.getDominio() == dominio or tempVerti.getDominio() > dominio:
                     break
 
-        if tempVerti.getDominio() == dominio:
-            print(tempVerti.getLetra() + " PUTOOOOOOOOOOOOOOOOOOOOOOOOOOOOOSSSSSS 2 " + tempVerti.getDominio())
-            # if tempVerti.atras != None:
-            #     while tempVerti.atras != None:
-            #         tempVerti = tempVerti.atras
-            # tempVerti.atras = nuevoNodoMatriz
-            # nuevoNodoMatriz.adelante = tempVerti
-
-
         if tempVerti.derecha != None and tempVerti.derecha.getDominio() > dominio:
-            print("PUTOOOOOOOOOOOOOOOOOOOOOOOOOOOOOSSSSSS 1")
             temp5 = tempVerti
             temp6 = tempVerti.derecha
             tempVerti = nuevoNodoMatriz
@@ -468,16 +458,14 @@ class Matriz:
             tempVerti.izquierda = temp5
 
         elif tempVerti != None and  tempVerti.getDominio() != "" and tempVerti.getDominio() > dominio:
-            print(tempVerti.getLetra()+" PUTOOOOOOOOOOOOOOOOOOOOOOOOOOOOOSSSSSS 2 "+tempVerti.getDominio())
             temp6 = tempVerti
             tempVerti = nuevoNodoMatriz
             temp5.derecha = tempVerti
             tempVerti.derecha = temp6
             temp6.izquierda = tempVerti
-            tempVerti.derecha = temp5
+            tempVerti.izquierda = temp5
 
         else:
-            print(tempVerti.getLetra() + " PUTOOOOOOOOOOOOOOOOOOOOOOOOOOOOOSSSSSS 3 " + tempVerti.getDominio())
             tempVerti.derecha = nuevoNodoMatriz
             nuevoNodoMatriz.izquierda = tempVerti
 
@@ -604,18 +592,18 @@ class Matriz:
 #pilin.listar()
 #pilin.eliminar()
 
-# matrix = Matriz()
-# matrix.ingresar("rafa", "r", "gmail")
-# matrix.ingresar("jorge", "j", "gmail")
-# matrix.ingresar("ramon", "r", "hotmail")
-# matrix.ingresar("Pantera", "p", "yahoo")
-# matrix.ingresar("parto", "p", "hotmail")
-# matrix.ingresar("popo", "p", "yahoo")
-# matrix.ingresar("paolita", "p", "outlock")
-# matrix.ingresar("pedrito", "p", "yahoo")
-# matrix.ingresar("paco", "p", "gmail")
-# matrix.ingresar("taty", "t", "yahoo")
-# matrix.listarHorizont("r")
-# matrix.listarVerti("gmail")
-# matrix.listarVerti("yahoo")
-# matrix.listarHorizont("p")
+matrix = Matriz()
+matrix.ingresar("rafa", "r", "yahoo")
+matrix.ingresar("jorge", "j", "gmail")
+matrix.ingresar("ramon", "r", "hotmail")
+matrix.ingresar("Pantera", "p", "yahoo")
+matrix.ingresar("parto", "p", "hotmail")
+matrix.ingresar("popo", "p", "yahoo")
+matrix.ingresar("paolita", "p", "outlock")
+matrix.ingresar("pedrito", "p", "yahoo")
+matrix.ingresar("paco", "p", "gmail")
+matrix.ingresar("taty", "t", "yahoo")
+matrix.listarHorizont("r")
+matrix.listarVerti("gmail")
+matrix.listarVerti("yahoo")
+matrix.listarHorizont("p")
