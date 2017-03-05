@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 package practica2;
+
 import com.squareup.okhttp.*;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -126,38 +127,81 @@ public class Matriz extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         String a[] = jTextField1.getText().split("@");
         String letras[] = a[0].split("");
-        String dominioooo[] = a[1].split(".");
         String nombre = a[0];
         String letra = letras[0];
-        String dominio = dominioooo[0];
-        
+        String dominio = a[1];
+        RequestBody formBody = new FormEncodingBuilder()
+                .add("nombre", nombre)
+                .add("letra", letra)
+                .add("dominio", dominio)
+                .build();
+
+        jalarResult("ingresaMatriz", formBody);
+
         jTextField1.setText("");
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         String a[] = jTextField2.getText().split("@");
         String letras[] = a[0].split("");
-        String dominioooo[] = a[1].split(".");
         String nombre = a[0];
         String letra = letras[0];
-        String dominio = dominioooo[0];
-        
+        String dominio = a[1];
+        RequestBody formBody = new FormEncodingBuilder()
+                .add("nombre", nombre)
+                .add("letra", letra)
+                .add("dominio", dominio)
+                .build();
+
+        jalarResult("eliminaMatriz", formBody);
+
         jTextField2.setText("");
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         String letra = jTextField3.getText();
-        
+        RequestBody formBody = new FormEncodingBuilder()
+                .add("letra", letra)
+                .build();
+
+        String correos = jalarResult("buscaLetra", formBody);
+        System.out.println(correos);
+
         jTextField3.setText("");
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        String a[] = jTextField4.getText().split("@");
-        String dominioooo[] = a[1].split(".");
-        String dominio = dominioooo[0];
-        
-        jTextField4.setText("");
+        try {
+            String a[] = jTextField4.getText().split("@");
+            String dominio = a[1];
+            RequestBody formBody = new FormEncodingBuilder()
+                    .add("dominio", dominio)
+                    .build();
+
+            String correos = jalarResult("buscaDominios", formBody);
+            System.out.println(correos);
+
+            jTextField4.setText("");
+        } catch (Exception ex) {
+            System.out.println("DEBE EMPEZAR CON \"@\"");
+        }
     }//GEN-LAST:event_jButton4ActionPerformed
+
+    public static String jalarResult(String metodo, RequestBody formBody) {
+        try {
+            URL url = new URL("http://0.0.0.0:5000/" + metodo);
+            Request req = new Request.Builder().url(url).post(formBody).build();
+            Response resp = clienteWeb.newCall(req).execute();
+            String respuesta = resp.body().string();
+            //System.out.println(respuesta);
+            return respuesta;
+        } catch (MalformedURLException ex) {
+            //
+        } catch (Exception ex) {
+            //
+        }
+        return null;
+    }
 
     /**
      * @param args the command line arguments

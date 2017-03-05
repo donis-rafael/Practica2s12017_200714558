@@ -7,7 +7,9 @@ app = Flask("Web Service Flask")
 cola = Practica2.Cola()
 pila = Practica2.Pila()
 lista = Practica2.Lista()
+matrix = Practica2.Matriz()
 
+################### COLA #########################
 @app.route('/metodoWeb', methods=['POST'])
 def hola():
     parametro = str(request.form['nombre'])
@@ -27,6 +29,7 @@ def imprime():
     cola.hacerGrafica()
     return 'otroYa'
 
+################### LISTA #########################
 @app.route('/ingresaLista', methods=['POST'])
 def list():
     valor = str(request.form['palabra'])
@@ -48,6 +51,7 @@ def searchLista():
     lista.hacerGrafica()
     return dato
 
+################### PILA #########################
 @app.route('/ingresaPila', methods=['POST'])
 def ingresaPila():
     valor = int(str(request.form['valor']))
@@ -61,6 +65,39 @@ def eliminaPila():
     dato = str(pila.eliminar())
     pila.hacerGrafica()
     return dato
+
+################### MATRIZ #########################
+@app.route('/ingresaMatriz', methods=['POST'])
+def matrixaa():
+    nombre = str(request.form['nombre'])
+    letra = str(request.form['letra'])
+    dominio = str(request.form['dominio'])
+    matrix.ingresar(nombre, letra, dominio)
+    #matrix.hacerGrafica()
+    return 'otroYa'
+
+@app.route('/eliminaMatriz', methods=['POST'])
+def deleteMatrix():
+    nombre = str(request.form['nombre'])
+    letra = str(request.form['letra'])
+    dominio = str(request.form['dominio'])
+    matrix.eliminar(nombre, letra, dominio)
+    #matrix.hacerGrafica()
+    return 'otroYa'
+
+@app.route('/buscaLetra', methods=['POST'])
+def buscaLetras():
+    letra = str(request.form['letra'])
+    correos = str(matrix.buscarPorLetra(letra))
+    #matrix.hacerGrafica()
+    return correos
+
+@app.route('/buscaDominios', methods=['POST'])
+def buscaDominio():
+    dominio = str(request.form['dominio'])
+    correos = str(matrix.buscarPorDominio(dominio))
+    #matrix.hacerGrafica()
+    return correos
 
 if __name__ == "__main__":
     app.run(debug=True, host='0.0.0.0')

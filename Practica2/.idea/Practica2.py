@@ -310,7 +310,6 @@ class NodoMatriz:
 class Matriz:
 
     def __init__(self):
-        self.inicio = NodoMatriz("", "", "")
         self.inicioHorizontal = None
         self.inicioVertical = None
 
@@ -502,7 +501,7 @@ class Matriz:
 
         return False
 
-    def listarHorizont(self, letra):
+    def buscarPorLetra(self, letra):
         if self.vacioVerti() == False:
             aux = self.inicioVertical
             while aux != None and aux.getLetra() != letra:
@@ -511,18 +510,23 @@ class Matriz:
             if aux.getLetra() == letra:
                 print("** " + aux.getLetra() + " **")
                 if aux.derecha != None:
+                    cadena = ""
                     aux = aux.derecha
                     while aux != None:
-                        print(aux.getNombre() + " " + aux.getDominio())
+                        print(aux.getNombre() + "@" + aux.getDominio())
+                        cadena = cadena + aux.getNombre() + "@" + aux.getDominio() +"\n"
                         if aux.atras != None:
                             aux2 = aux.atras
                             while aux2 != None:
-                                print(aux2.getNombre() + " " + aux2.getDominio())
+                                print(aux2.getNombre() + "@" + aux2.getDominio())
+                                cadena = cadena + aux2.getNombre() + "@" + aux2.getDominio() + "\n"
                                 aux2 = aux2.atras
                         aux = aux.derecha
 
+                    return cadena
 
-    def listarVerti(self, dominio):
+
+    def buscarPorDominio(self, dominio):
         if self.vacioHorizont() == False:
             aux = self.inicioHorizontal
             while aux != None and aux.getDominio() != dominio:
@@ -531,17 +535,221 @@ class Matriz:
             if aux.getDominio() == dominio:
                 print("** " + aux.getDominio() + " **")
                 if aux.abajo != None:
+                    cadena = ""
                     aux = aux.abajo
                     while aux != None:
-                        print(aux.getNombre() + " " + aux.getLetra())
+                        print(aux.getNombre() + "@" + aux.getLetra())
+                        cadena = cadena + aux.getNombre() + "@" + aux.getDominio() +" || Letra = "+ aux.getLetra()+"\n"
                         if aux.atras != None:
                             aux2 = aux.atras
                             while aux2 != None:
-                                print(aux2.getNombre() + " " + aux2.getLetra())
+                                print(aux2.getNombre() + "@" + aux2.getLetra())
+                                cadena = cadena + aux2.getNombre() + "@" + aux2.getDominio() +" || Letra = "+ aux.getLetra()+"\n"
                                 aux2 = aux2.atras
                         aux = aux.abajo
 
+                    return cadena
 
+    def eliminar(self, nombre, letra, dominio):
+        tempHorizont = self.inicioHorizontal
+        tempVerti = self.inicioVertical
+        temp1 = temp2 = None
+
+        while tempHorizont != None and tempHorizont.getDominio() != dominio:
+            temp1 = tempHorizont
+            tempHorizont = tempHorizont.derecha
+
+        while tempVerti != None and tempVerti.getLetra() != letra:
+            temp2 = tempVerti
+            tempVerti = tempVerti.abajo
+
+        if tempHorizont != None and tempVerti != None and tempHorizont.getDominio() == dominio and tempVerti.getLetra() == letra:
+
+            while tempHorizont != None and tempHorizont.getLetra() != letra:
+                temp3 = tempHorizont
+                tempHorizont = tempHorizont.abajo
+
+            while tempVerti != None and tempVerti.getDominio() != dominio:
+                temp4 = tempVerti
+                tempVerti = tempVerti.derecha
+
+            if tempHorizont != None and tempHorizont.atras != None:
+                while tempHorizont.atras != None and tempHorizont.getNombre() != nombre:
+                    temp3 = tempHorizont
+                    tempHorizont = tempHorizont.atras
+
+            if tempVerti != None and tempVerti.atras != None:
+                while tempVerti.atras != None and tempVerti.getNombre() != nombre:
+                    temp4 = tempVerti
+                    tempVerti = tempVerti.atras
+
+            ################ EMPIEZA ELIMINACION DE NODOS EN CABECERA HORIZONTAL
+            if tempHorizont != None and tempHorizont.getNombre() == nombre:
+                if temp3 != None and temp3.getNombre() == "":
+                    if tempHorizont.atras != None:
+                        temp3.abajo = tempHorizont.atras
+                        tempHorizont.atras.arriba = temp3
+                        if tempHorizont.abajo != None:
+                            tempHorizont.atras.abajo = tempHorizont.abajo
+                            tempHorizont.abajo.arriba = tempHorizont.atras
+                    elif tempHorizont.abajo != None:
+                        temp3.abajo = tempHorizont.abajo
+                        tempHorizont.abajo.arriba = temp3
+                    else:
+                        temp3.abajo = None
+                        if temp1 != None and temp3.derecha != None:
+                            temp1.derecha = temp3.derecha
+                            temp3.derecha.izquierda = temp1
+                            temp3 = None
+                        elif temp1 != None:
+                            temp1.derecha = None
+                            temp3 = None
+                        elif temp3.derecha != None:
+                            temp3.derecha.izquierda = None
+                            self.inicioHorizontal = temp3.derecha
+                            temp3 = None
+                        else:
+                            temp3 = self.inicioHorizontal = None
+
+                elif temp3 != None:
+                    if tempHorizont.adelante != None:
+                        if tempHorizont.atras != None:
+                            temp3.atras = tempHorizont.atras
+                            tempHorizont.atras.adelante = temp3
+                        else:
+                            temp3.atras = None
+                    elif tempHorizont.atras != None:
+                        temp3.abajo = tempHorizont.atras
+                        if tempHorizont.abajo != None:
+                            tempHorizont.atras.abajo = tempHorizont.abajo
+                            tempHorizont.abajo.arriba = tempHorizont.atras
+                        tempHorizont.atras.arriba = temp3
+                    elif tempHorizont.abajo != None:
+                        temp3.abajo = tempHorizont.abajo
+                        tempHorizont.abajo.arriba = temp3
+                    else:
+                        temp3.abajo = None
+
+            ################ EMPIEZA ELIMINACION DE NODOS EN CABECERA VERTICAL
+            if tempVerti != None and tempVerti.getNombre() == nombre:
+                if temp4 != None and temp4.getNombre() == "":
+                    if tempVerti.atras != None:
+                        temp4.derecha = tempVerti.atras
+                        tempVerti.atras.izquierda = temp4
+                        if tempVerti.derecha != None:
+                            tempVerti.atras.derecha = tempVerti.derecha
+                            tempVerti.derecha.izquierda = tempVerti.atras
+                    elif tempVerti.derecha != None:
+                        temp4.derecha = tempVerti.derecha
+                        tempVerti.derecha.izquierda = temp4
+                    else:
+                        temp4.derecha = None
+                        if temp2 != None and temp4.abajo != None:
+                            temp2.abajo = temp4.abajo
+                            temp4.abajo.arriba = temp2
+                            temp4 = None
+                        elif temp2 != None:
+                            temp2.abajo = None
+                            temp4 = None
+                        elif temp4.abajo != None:
+                            temp4.abajo.arriba = None
+                            self.inicioVertical = temp4.abajo
+                            temp4 = None
+                        else:
+                            temp4 = self.inicioVertical = None
+                elif temp4 != None:
+                    if tempVerti.adelante != None:
+                        if tempVerti.atras != None:
+                            temp4.atras = tempVerti.atras
+                            tempVerti.atras.adelante = temp4
+                        else:
+                            temp4.atras = None
+                    elif tempVerti.atras != None:
+                        temp4.derecha = tempVerti.atras
+                        if tempVerti.derecha != None:
+                            tempVerti.atras.derecha = tempVerti.derecha
+                            tempVerti.derecha.izquierda = tempVerti.atras
+                        tempVerti.atras.izquierda = temp4
+                    elif tempVerti.derecha != None:
+                        temp4.derecha = tempVerti.derecha
+                        tempVerti.derecha.izquierda = temp4
+                    else:
+                        temp4.derecha = None
+
+    def hacerGrafica(self):
+        if self.vacioHorizont() == True or self.vacioVerti() == True:
+            return
+        else:
+            file = open("matriz.dot", "w")
+            file.write("digraph G\n{\n")
+            tempHorizont = self.inicioHorizontal
+            tempVerti = self.inicioVertical
+
+            while tempVerti != None:
+                file.write("\"n" + str(tempVerti.getLetra()) + "\"[label = \"" + str(tempVerti.getLetra()) + "\", style = filled, shape=box]\n")
+                if (tempVerti.abajo != None):
+                    file.write("\"n" + str(tempVerti.getLetra()) + "\" -> \"n" + str(tempVerti.abajo.getLetra()) + "\"\n")
+                    file.write("\"n" + str(tempVerti.abajo.getLetra()) + "\" -> \"n" + str(tempVerti.getLetra()) + "\"\n")
+
+                if (tempVerti.derecha != None):
+                    file.write("\"n" + str(tempVerti.derecha.getLetra()) + "," + str(
+                        tempVerti.derecha.getNombre()) + "," + str(
+                        tempVerti.derecha.getDominio()) + "\"[label = \"" + str(
+                        tempVerti.derecha.getNombre()) + "\", style = filled, shape=circle]\n")
+                    file.write("\"n" + str(tempVerti.getLetra()) + "\" -> \"n" + str(tempVerti.derecha.getLetra()) + ","+ str(tempVerti.derecha.getNombre()) +","+ str(tempVerti.derecha.getDominio()) + "\"[constraint=false];\n")
+                    file.write("\"n" + str(tempVerti.derecha.getLetra()) + ","+ str(tempVerti.derecha.getNombre()) +","+ str(tempVerti.derecha.getDominio()) + "\" -> \"n" + str(tempVerti.getLetra()) + "\"[constraint=false];\n")
+                    file.write("{rank=same; \"n" + str(tempVerti.getLetra()) + "\"  \"n" + str(tempVerti.derecha.getLetra()) + ","+ str(tempVerti.derecha.getNombre()) +","+ str(tempVerti.derecha.getDominio()) + "\"}\n")
+                    file.write("{rank=same; \"n" + str(tempVerti.derecha.getLetra()) + ","+ str(tempVerti.derecha.getNombre()) +","+ str(tempVerti.derecha.getDominio()) + "\"  \"n" + str(tempVerti.getLetra()) + "\"}\n")
+                    AUXtempVerti = tempVerti.derecha
+
+                while (AUXtempVerti.derecha != None):
+                    file.write("\"n" + str(AUXtempVerti.derecha.getLetra()) + ","+ str(AUXtempVerti.derecha.getNombre()) +","+ str(AUXtempVerti.derecha.getDominio()) +"\"[label = \"" + str(AUXtempVerti.derecha.getNombre()) + "\", style = filled, shape=circle]\n")
+                    file.write("\"n" + str(AUXtempVerti.getLetra()) + ","+ str(AUXtempVerti.getNombre()) +","+ str(AUXtempVerti.getDominio()) + "\" -> \"n"
+                               + str(AUXtempVerti.derecha.getLetra()) + ","+ str(AUXtempVerti.derecha.getNombre()) +","+ str(AUXtempVerti.derecha.getDominio()) + "\"[constraint=false];\n")
+                    file.write("\"n" + str(AUXtempVerti.derecha.getLetra()) + ","+ str(AUXtempVerti.derecha.getNombre()) +","+ str(AUXtempVerti.derecha.getDominio())
+                               + "\" -> \"n" + str(AUXtempVerti.getLetra()) + ","+ str(AUXtempVerti.getNombre()) +","+ str(AUXtempVerti.getDominio()) + "\"[constraint=false];\n")
+                    file.write("{rank=same; \"n" + str(AUXtempVerti.getLetra()) + ","+ str(AUXtempVerti.getNombre()) +","+ str(AUXtempVerti.getDominio()) + "\" \"n" + str(AUXtempVerti.derecha.getLetra())
+                               + ","+ str(AUXtempVerti.derecha.getNombre()) +","+ str(AUXtempVerti.derecha.getDominio()) + "\"}\n");
+                    file.write("{rank=same; \"n" + str(AUXtempVerti.derecha.getLetra()) + ","+ str(AUXtempVerti.derecha.getNombre()) +","+ str(AUXtempVerti.derecha.getDominio()) + "\" \"n"
+                               + str(AUXtempVerti.getLetra()) + ","+ str(AUXtempVerti.getNombre()) +","+ str(AUXtempVerti.getDominio()) + "\"}\n");
+
+                    AUXtempVerti = AUXtempVerti.derecha
+
+                tempVerti = tempVerti.abajo
+
+            while tempHorizont != None:
+                file.write("\"n" + str(tempHorizont.getDominio()) + "\"[label = \"" + str(tempHorizont.getDominio()) + "\", style = filled, shape=box]\n")
+                if (tempHorizont.derecha != None):
+                    file.write("\"n" + str(tempHorizont.getDominio()) + "\" -> \"n" + str(tempHorizont.derecha.getDominio()) + "\"[constraint=false];\n")
+                    file.write("\"n" + str(tempHorizont.derecha.getDominio()) + "\" -> \"n" + str(tempHorizont.getDominio()) + "\"[constraint=false];\n")
+                    file.write("{rank=same; \"n" + str(tempHorizont.getDominio()) + "\"  \"n" + str(tempHorizont.derecha.getDominio()) + "\"}\n")
+                    file.write("{rank=same; \"n" + str(tempHorizont.derecha.getDominio()) + "\"  \"n" + str(tempHorizont.getDominio()) + "\"}\n")
+
+                if (tempHorizont.abajo != None):
+                    # file.write("\"n" + str(tempHorizont.abajo.getLetra()) + "," + str(
+                    #     tempHorizont.abajo.getNombre()) + "," + str(
+                    #     tempHorizont.abajo.getDominio()) + "\"[label = \"" + str(
+                    #     tempHorizont.abajo.getNombre()) + "\", style = filled, shape=circle]\n")
+                    file.write("\"n" + str(tempHorizont.getDominio()) + "\" -> \"n" + str(tempHorizont.abajo.getLetra()) + ","+ str(tempHorizont.abajo.getNombre()) +","+ str(tempHorizont.abajo.getDominio()) + "\"[constraint=false];\n")
+                    file.write("\"n" + str(tempHorizont.abajo.getLetra()) + ","+ str(tempHorizont.abajo.getNombre()) +","+ str(tempHorizont.abajo.getDominio()) + "\" -> \"n" + str(tempHorizont.getDominio()) + "\"[constraint=false];\n")
+                    file.write("{rank=same; \"n" + str(tempHorizont.getDominio()) + "\"  \"n" + str(tempHorizont.abajo.getLetra()) + ","+ str(tempHorizont.abajo.getNombre()) +","+ str(tempHorizont.abajo.getDominio()) + "\"}\n")
+                    file.write("{rank=same; \"n" + str(tempHorizont.abajo.getLetra()) + ","+ str(tempHorizont.abajo.getNombre()) +","+ str(tempHorizont.abajo.getDominio()) + "\"  \"n" + str(tempHorizont.getDominio()) + "\"}\n")
+                    AUXtempHorizont = tempHorizont.abajo
+
+                while (AUXtempVerti.derecha != None):
+                    #file.write("\"n" + str(AUXtempVerti.derecha.getLetra()) + ","+ str(AUXtempVerti.derecha.getNombre()) +","+ str(AUXtempVerti.derecha.getDominio()) +"\"[label = \"" + str(AUXtempVerti.derecha.getNombre()) + "\", style = filled, shape=circle]\n")
+                    file.write("\"n" + str(AUXtempHorizont.getLetra()) + ","+ str(AUXtempHorizont.getNombre()) +","+ str(AUXtempHorizont.getDominio()) + "\" -> \"n"
+                               + str(AUXtempHorizont.abajo.getLetra()) + ","+ str(AUXtempHorizont.abajo.getNombre()) +","+ str(AUXtempHorizont.abajo.getDominio()) + "\"\n")
+                    file.write("\"n" + str(AUXtempHorizont.abajo.getLetra()) + ","+ str(AUXtempHorizont.abajo.getNombre()) +","+ str(AUXtempHorizont.abajo.getDominio())
+                               + "\" -> \"n" + str(AUXtempHorizont.getLetra()) + ","+ str(AUXtempHorizont.getNombre()) +","+ str(AUXtempHorizont.getDominio()) + "\"\n")
+
+                    AUXtempHorizont = AUXtempHorizont.abajo
+
+                tempHorizont = tempHorizont.derecha
+
+            file.write("}")
+            file.close()
+            os.system("dot -Tjpg matriz.dot > matriz.jpg")
 #--------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------- PRUEBAS ---------------------------------------------------------------
 # colita = Cola()
@@ -603,7 +811,13 @@ matrix.ingresar("paolita", "p", "outlock")
 matrix.ingresar("pedrito", "p", "yahoo")
 matrix.ingresar("paco", "p", "gmail")
 matrix.ingresar("taty", "t", "yahoo")
-matrix.listarHorizont("r")
-matrix.listarVerti("gmail")
-matrix.listarVerti("yahoo")
-matrix.listarHorizont("p")
+matrix.hacerGrafica()
+matrix.buscarPorLetra("r")
+matrix.buscarPorDominio("gmail")
+matrix.buscarPorDominio("yahoo")
+matrix.buscarPorLetra("p")
+matrix.eliminar("Pantera", "p", "yahoo")
+matrix.buscarPorLetra("p")
+matrix.buscarPorDominio("yahoo")
+matrix.eliminar("jorge", "j", "gmail")
+matrix.buscarPorDominio("gmail")
