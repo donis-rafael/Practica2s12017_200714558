@@ -73,6 +73,7 @@ def matrixaa():
     letra = str(request.form['letra'])
     dominio = str(request.form['dominio'])
     matrix.ingresar(nombre, letra, dominio)
+    matrix.hacerGrafica()
     #matrix.hacerGrafica()
     return 'otroYa'
 
@@ -82,6 +83,7 @@ def deleteMatrix():
     letra = str(request.form['letra'])
     dominio = str(request.form['dominio'])
     matrix.eliminar(nombre, letra, dominio)
+    matrix.hacerGrafica()
     #matrix.hacerGrafica()
     return 'otroYa'
 

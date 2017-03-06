@@ -509,17 +509,14 @@ class Matriz:
                 aux = aux.abajo
 
             if aux.getLetra() == letra:
-                print("** " + aux.getLetra() + " **")
                 if aux.derecha != None:
                     cadena = ""
                     aux = aux.derecha
                     while aux != None:
-                        print(aux.getNombre() + "@" + aux.getDominio())
                         cadena = cadena + aux.getNombre() + "@" + aux.getDominio() +"\n"
                         if aux.atras != None:
                             aux2 = aux.atras
                             while aux2 != None:
-                                print(aux2.getNombre() + "@" + aux2.getDominio())
                                 cadena = cadena + aux2.getNombre() + "@" + aux2.getDominio() + "\n"
                                 aux2 = aux2.atras
                         aux = aux.derecha
@@ -534,17 +531,14 @@ class Matriz:
                 aux = aux.derecha
 
             if aux.getDominio() == dominio:
-                print("** " + aux.getDominio() + " **")
                 if aux.abajo != None:
                     cadena = ""
                     aux = aux.abajo
                     while aux != None:
-                        print(aux.getNombre() + "@" + aux.getLetra())
                         cadena = cadena + aux.getNombre() + "@" + aux.getDominio() +" || Letra = "+ aux.getLetra()+"\n"
                         if aux.atras != None:
                             aux2 = aux.atras
                             while aux2 != None:
-                                print(aux2.getNombre() + "@" + aux2.getLetra())
                                 cadena = cadena + aux2.getNombre() + "@" + aux2.getDominio() +" || Letra = "+ aux.getLetra()+"\n"
                                 aux2 = aux2.atras
                         aux = aux.abajo
@@ -685,11 +679,10 @@ class Matriz:
             file.write("digraph G\n{\n")
             tempHorizont = self.inicioHorizontal
             tempVerti = self.inicioVertical
-            file.write("\"INICIO\"[label = \"Inicio\", style = filled, shape=box]\n")
+            file.write("\"INICIO\"[label = \"Inicio\", style = filled, fillcolor=\"#0D5A73\", fontcolor=\"#A2E7FF\", shape=box]\n")
             file.write("\"INICIO\" -> \"n" + str(tempVerti.getLetra()) + "\"\n")
             while tempVerti != None:
-                file.write("\"n" + str(tempVerti.getLetra()) + "\"[label = \"" + str(tempVerti.getLetra()) + "\", style = filled, shape=box]\n")
-                #file.write("\"n" + str(tempVerti.abajo.getLetra()) + "\" -> \"INICIO\"\n")
+                file.write("\"n" + str(tempVerti.getLetra()) + "\"[label = \"" + str(tempVerti.getLetra()) + "\", style = filled, fillcolor=\"#E1E16E\", fontcolor=\"#040404\", shape=box]\n")
                 if (tempVerti.abajo != None):
                     file.write("\"n" + str(tempVerti.getLetra()) + "\" -> \"n" + str(tempVerti.abajo.getLetra()) + "\"[rankdir=UD];\n")
                     file.write("\"n" + str(tempVerti.abajo.getLetra()) + "\" -> \"n" + str(tempVerti.getLetra()) + "\"\n")
@@ -698,7 +691,7 @@ class Matriz:
                     file.write("\"n" + str(tempVerti.derecha.getLetra()) + "," + str(
                         tempVerti.derecha.getNombre()) + "," + str(
                         tempVerti.derecha.getDominio()) + "\"[label = \"" + str(
-                        tempVerti.derecha.getNombre()) + "\", style = filled, shape=circle]\n")
+                        tempVerti.derecha.getNombre()) + "\", style = filled, fillcolor=\"#5C5C5A\", fontcolor=\"#FCFC29\", shape=circle]\n")
                     file.write("\"n" + str(tempVerti.getLetra()) + "\" -> \"n" + str(tempVerti.derecha.getLetra()) + ","+ str(tempVerti.derecha.getNombre()) +","+ str(tempVerti.derecha.getDominio()) + "\"[constraint=false];\n")
                     file.write("\"n" + str(tempVerti.derecha.getLetra()) + ","+ str(tempVerti.derecha.getNombre()) +","+ str(tempVerti.derecha.getDominio()) + "\" -> \"n" + str(tempVerti.getLetra()) + "\"[constraint=false];\n")
                     file.write("{rank=same; \"n" + str(tempVerti.getLetra()) + "\"  \"n" + str(tempVerti.derecha.getLetra()) + ","+ str(tempVerti.derecha.getNombre()) +","+ str(tempVerti.derecha.getDominio()) + "\"}\n")
@@ -706,7 +699,8 @@ class Matriz:
                     AUXtempVerti = tempVerti.derecha
 
                 while (AUXtempVerti.derecha != None):
-                    file.write("\"n" + str(AUXtempVerti.derecha.getLetra()) + ","+ str(AUXtempVerti.derecha.getNombre()) +","+ str(AUXtempVerti.derecha.getDominio()) +"\"[label = \"" + str(AUXtempVerti.derecha.getNombre()) + "\", style = filled, shape=circle]\n")
+                    file.write("\"n" + str(AUXtempVerti.derecha.getLetra()) + ","+ str(AUXtempVerti.derecha.getNombre()) +","+ str(AUXtempVerti.derecha.getDominio()) +"\"[label = \""
+                               + str(AUXtempVerti.derecha.getNombre()) + "\", style = filled, fillcolor=\"#5C5C5A\", fontcolor=\"#FCFC29\", shape=circle]\n")
                     file.write("\"n" + str(AUXtempVerti.getLetra()) + ","+ str(AUXtempVerti.getNombre()) +","+ str(AUXtempVerti.getDominio()) + "\" -> \"n"
                                + str(AUXtempVerti.derecha.getLetra()) + ","+ str(AUXtempVerti.derecha.getNombre()) +","+ str(AUXtempVerti.derecha.getDominio()) + "\"[constraint=false];\n")
                     file.write("\"n" + str(AUXtempVerti.derecha.getLetra()) + ","+ str(AUXtempVerti.derecha.getNombre()) +","+ str(AUXtempVerti.derecha.getDominio())
@@ -724,7 +718,7 @@ class Matriz:
             file.write("\"INICIO\" -> \"n" + str(tempHorizont.getDominio()) + "\"\n")
             file.write("{rank=same; \"INICIO\"  \"n" + str(tempHorizont.getDominio()) + "\"}\n")
             while tempHorizont != None:
-                file.write("\"n" + str(tempHorizont.getDominio()) + "\"[label = \"" + str(tempHorizont.getDominio()) + "\", style = filled, shape=box]\n")
+                file.write("\"n" + str(tempHorizont.getDominio()) + "\"[label = \"" + str(tempHorizont.getDominio()) + "\", style = filled, fillcolor=\"#E1E16E\", fontcolor=\"#040404\", shape=box]\n")
                 if (tempHorizont.derecha != None):
                     file.write("\"n" + str(tempHorizont.getDominio()) + "\" -> \"n" + str(tempHorizont.derecha.getDominio()) + "\"\n")
                     file.write("\"n" + str(tempHorizont.derecha.getDominio()) + "\" -> \"n" + str(tempHorizont.getDominio()) + "\"\n")
@@ -732,16 +726,11 @@ class Matriz:
                     file.write("{rank=same; \"n" + str(tempHorizont.derecha.getDominio()) + "\"  \"n" + str(tempHorizont.getDominio()) + "\"}\n")
 
                 if (tempHorizont.abajo != None):
-                    # file.write("\"n" + str(tempHorizont.abajo.getLetra()) + "," + str(
-                    #     tempHorizont.abajo.getNombre()) + "," + str(
-                    #     tempHorizont.abajo.getDominio()) + "\"[label = \"" + str(
-                    #     tempHorizont.abajo.getNombre()) + "\", style = filled, shape=circle]\n")
                     file.write("\"n" + str(tempHorizont.getDominio()) + "\" -> \"n" + str(tempHorizont.abajo.getLetra()) + ","+ str(tempHorizont.abajo.getNombre()) +","+ str(tempHorizont.abajo.getDominio()) + "\"[rankdir=UD];\n")
                     file.write("\"n" + str(tempHorizont.abajo.getLetra()) + ","+ str(tempHorizont.abajo.getNombre()) +","+ str(tempHorizont.abajo.getDominio()) + "\" -> \"n" + str(tempHorizont.getDominio()) + "\"\n")
                     AUXtempHorizont = tempHorizont.abajo
 
                 while (AUXtempHorizont.abajo != None):
-                    #file.write("\"n" + str(AUXtempVerti.derecha.getLetra()) + ","+ str(AUXtempVerti.derecha.getNombre()) +","+ str(AUXtempVerti.derecha.getDominio()) +"\"[label = \"" + str(AUXtempVerti.derecha.getNombre()) + "\", style = filled, shape=circle]\n")
                     file.write("\"n" + str(AUXtempHorizont.getLetra()) + ","+ str(AUXtempHorizont.getNombre()) +","+ str(AUXtempHorizont.getDominio()) + "\" -> \"n"
                                + str(AUXtempHorizont.abajo.getLetra()) + ","+ str(AUXtempHorizont.abajo.getNombre()) +","+ str(AUXtempHorizont.abajo.getDominio()) + "\"[rankdir=UD];\n")
                     file.write("\"n" + str(AUXtempHorizont.abajo.getLetra()) + ","+ str(AUXtempHorizont.abajo.getNombre()) +","+ str(AUXtempHorizont.abajo.getDominio())
@@ -751,6 +740,76 @@ class Matriz:
 
                 tempHorizont = tempHorizont.derecha
 
+            file.write("subgraph cluster_0 {\n")
+            file.write("style=filled;\n")
+            file.write("color=grey;\n")
+            file.write("node [style=filled,color=white];\n")
+
+            tempVerti = self.inicioVertical
+            while tempVerti != None:
+
+                if (tempVerti.derecha != None):
+                    AUXtempVerti = tempVerti.derecha
+
+                while (AUXtempVerti.derecha != None):
+                    if AUXtempVerti.atras != None:
+                        file.write("\"extra" + str(AUXtempVerti.getDominio()) + "\"[label = \"" + str(AUXtempVerti.derecha.getDominio()) + "\", style = filled, shape=box]\n")
+
+                    if AUXtempVerti.atras != None:
+                        file.write("\"extra" + str(AUXtempVerti.getDominio()) + "\"[label = \"" + str(
+                            AUXtempVerti.getDominio()) + "\", style = filled, shape=box]\n")
+                        file.write("\"n" + str(AUXtempVerti.atras.getLetra()) + "," + str(
+                            AUXtempVerti.atras.getNombre()) + "," + str(
+                            AUXtempVerti.atras.getDominio()) + "\"[label = \"" + str(
+                            AUXtempVerti.atras.getNombre())  + "\", style = filled, shape=circle]\n")
+                        file.write("\"extra" + str(AUXtempVerti.getDominio()) + "\" -> \"n" + str(AUXtempVerti.atras.getLetra()) + "," + str(
+                            AUXtempVerti.atras.getNombre()) + "," + str(
+                            AUXtempVerti.atras.getDominio()) +"\"\n")
+                        file.write("\"n" + str(AUXtempVerti.atras.getLetra()) + "," + str(
+                            AUXtempVerti.atras.getNombre()) + "," + str(
+                            AUXtempVerti.atras.getDominio()) + "\" -> \"extra" + str(AUXtempVerti.getDominio()) +"\"\n")
+                        AUX2Verti = AUXtempVerti.atras
+
+                        while (AUX2Verti.atras != None):
+                            file.write("\"n" + str(AUX2Verti.atras.getLetra()) + ","+ str(AUX2Verti.atras.getNombre()) +","+ str(AUX2Verti.atras.getDominio()) +"\"[label = \"" + str(AUX2Verti.atras.getNombre()) + "\", style = filled, shape=circle]\n")
+                            file.write("\"n" + str(AUX2Verti.getLetra()) + ","+ str(AUX2Verti.getNombre()) +","+ str(AUX2Verti.getDominio()) + "\" -> \"n"
+                                       + str(AUX2Verti.atras.getLetra()) + ","+ str(AUX2Verti.atras.getNombre()) +","+ str(AUX2Verti.atras.getDominio()) + "\"\n")
+                            file.write("\"n" + str(AUX2Verti.atras.getLetra()) + ","+ str(AUX2Verti.atras.getNombre()) +","+ str(AUX2Verti.atras.getDominio())
+                                       + "\" -> \"n" + str(AUX2Verti.getLetra()) + ","+ str(AUX2Verti.getNombre()) +","+ str(AUX2Verti.getDominio()) + "\"\n")
+
+                            AUX2Verti = AUX2Verti.atras
+
+                    AUXtempVerti = AUXtempVerti.derecha
+
+
+                if AUXtempVerti.atras != None:
+                    file.write("\"extra" + str(AUXtempVerti.getDominio()) + "\"[label = \"" + str(
+                        AUXtempVerti.getDominio()) + "\", style = filled, shape=box]\n")
+                    file.write("\"n" + str(AUXtempVerti.atras.getLetra()) + "," + str(
+                            AUXtempVerti.atras.getNombre()) + "," + str(
+                            AUXtempVerti.atras.getDominio()) + "\"[label = \"" + str(
+                            AUXtempVerti.atras.getNombre())  + "\", style = filled, shape=circle]\n")
+                    file.write("\"extra" + str(AUXtempVerti.getDominio()) + "\" -> \"n" + str(AUXtempVerti.atras.getLetra()) + "," + str(
+                            AUXtempVerti.atras.getNombre()) + "," + str(
+                            AUXtempVerti.atras.getDominio()) + "\"\n")
+                    file.write("\"n" + str(AUXtempVerti.atras.getLetra()) + "," + str(
+                            AUXtempVerti.atras.getNombre()) + "," + str(
+                            AUXtempVerti.atras.getDominio()) + "\" -> \"extra" + str(AUXtempVerti.getDominio()) +"\"\n")
+                    AUX2Verti = AUXtempVerti.atras
+
+                    while (AUX2Verti.atras != None):
+                        file.write("\"n" + str(AUX2Verti.atras.getLetra()) + ","+ str(AUX2Verti.atras.getNombre()) +","+ str(AUX2Verti.atras.getDominio()) +"\"[label = \"" + str(AUX2Verti.atras.getNombre()) + "\", style = filled, shape=circle]\n")
+                        file.write("\"n" + str(AUX2Verti.getLetra()) + ","+ str(AUX2Verti.getNombre()) +","+ str(AUX2Verti.getDominio()) + "\" -> \"n"
+                            + str(AUX2Verti.atras.getLetra()) + ","+ str(AUX2Verti.atras.getNombre()) +","+ str(AUX2Verti.atras.getDominio()) + "\"\n")
+                        file.write("\"n" + str(AUX2Verti.atras.getLetra()) + ","+ str(AUX2Verti.atras.getNombre()) +","+ str(AUX2Verti.atras.getDominio())
+                            + "\" -> \"n" + str(AUX2Verti.getLetra()) + ","+ str(AUX2Verti.getNombre()) +","+ str(AUX2Verti.getDominio()) + "\"\n")
+
+                        AUX2Verti = AUX2Verti.atras
+
+                tempVerti = tempVerti.abajo
+
+            file.write("label = \"PROFUNDIDAD\";\n")
+            file.write("}\n")
             file.write("}")
             file.close()
             os.system("dot -Tjpg matriz.dot > matriz.jpg")
@@ -805,25 +864,25 @@ class Matriz:
 #pilin.listar()
 #pilin.eliminar()
 
-matrix = Matriz()
-matrix.ingresar("rafa", "r", "yahoo.com")
-matrix.ingresar("jorge", "j", "gmail.com")
-matrix.ingresar("ramon", "r", "hotmail.com")
-matrix.ingresar("Pantera", "p", "yahoo.com")
-matrix.ingresar("parto", "p", "hotmail.com")
-matrix.ingresar("popo", "p", "yahoo.com")
-matrix.ingresar("pao", "p", "gmail.com")
-matrix.ingresar("jose", "p", "outlock.com")
-matrix.ingresar("pedrito", "p", "yahoo.com")
-matrix.ingresar("taty", "t", "yahoo.com")
-matrix.ingresar("peter", "p", "gmail.com")
-matrix.hacerGrafica()
-matrix.buscarPorLetra("r")
-matrix.buscarPorDominio("gmail.com")
-matrix.buscarPorDominio("yahoo.com")
-matrix.buscarPorLetra("p")
-matrix.eliminar("Pantera", "p", "yahoo.com")
-matrix.buscarPorLetra("p")
-matrix.buscarPorDominio("yahoo.com")
-matrix.eliminar("jorge", "j", "gmail.com")
-matrix.buscarPorDominio("gmail.com")
+# matrix = Matriz()
+# matrix.ingresar("rafa", "r", "yahoo.com")
+# matrix.ingresar("jorge", "j", "gmail.com")
+# matrix.ingresar("ramon", "r", "hotmail.com")
+# matrix.ingresar("Pantera", "p", "yahoo.com")
+# matrix.ingresar("parto", "p", "hotmail.com")
+# matrix.ingresar("popo", "p", "yahoo.com")
+# matrix.ingresar("pao", "p", "gmail.com")
+# matrix.ingresar("jose", "p", "outlock.com")
+# matrix.ingresar("pedrito", "p", "yahoo.com")
+# matrix.ingresar("peter", "p", "gmail.com")
+# matrix.ingresar("taty", "t", "yahoo.com")
+# matrix.hacerGrafica()
+# matrix.buscarPorLetra("r")
+# matrix.buscarPorDominio("gmail.com")
+# matrix.buscarPorDominio("yahoo.com")
+# matrix.buscarPorLetra("p")
+# matrix.eliminar("Pantera", "p", "yahoo.com")
+# matrix.buscarPorLetra("p")
+# matrix.buscarPorDominio("yahoo.com")
+# matrix.eliminar("jorge", "j", "gmail.com")
+# matrix.buscarPorDominio("gmail.com")
